@@ -1,9 +1,11 @@
 ﻿@page "/"
+@using SkiaSharp.Views.Blazor
 
-<PageTitle>Index</PageTitle>
+<SKGLView IgnorePixelScaling="true" EnableRenderLoop="true" OnPaintSurface="OnPaintSurface"/>
 
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
-
-<SurveyPrompt Title="How is Blazor working for you?" />
+<style>
+    canvas {
+        width: 100vw;
+        height: 100vh;
+    }
+</style>
