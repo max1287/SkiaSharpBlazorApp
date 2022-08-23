@@ -1,0 +1,66 @@
+﻿@page "/sample7"
+@using SkiaSharp
+@using SkiaSharp.Views.Blazor
+
+<PageTitle>Sample 7</PageTitle>
+
+<h1>Draw rectangle outside of bounds by 100px using <code>SKMaskFilter</code> blur inside <code>SKGLView</code> component</h1>
+<p>Randomly fails</p>
+<code>SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 2)</code>
+
+<SKGLView IgnorePixelScaling="true" EnableRenderLoop="true" OnPaintSurface="OnPaintSurface" />
+
+@code {
+    private Random rnd = new Random();
+
+    private void OnPaintSurface(SKPaintGLSurfaceEventArgs e)
+    {
+        var canvas = e.Surface.Canvas;
+
+        float width = 500;
+        float height = 500;
+
+        var rect = SKRect.Create(100, 100, width, height);
+        DrawInnerBlurRectangle(canvas, rect);
+    }
+
+    private void DrawInnerBlurRectangle(SKCanvas canvas, SKRect rect)
+    {
+        // create the rounded rectangle
+        var roundedRect = new SKPath();
+        roundedRect.AddRoundRect(rect, 10, 10);
+
+        // draw the white background
+        var p = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                Color = SKColors.White
+            };
+        canvas.DrawPath(roundedRect, p);
+
+        using (new SKAutoCanvasRestore(canvas))
+        {
+            // clip the canvas to stop the blur from appearing outside
+            canvas.ClipPath(roundedRect, SKClipOperation.Intersect, true);
+
+            // draw the wide blur all around
+            p.Color = SKColors.Black;
+            p.Style = SKPaintStyle.Stroke;
+            p.StrokeWidth = 2;
+            p.MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 2);
+            canvas.Translate(0.5f, 1.5f);
+            canvas.DrawPath(roundedRect, p);
+
+            // draw the narrow blur at the top
+            p.StrokeWidth = 1;
+            p.MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 1);
+            canvas.DrawPath(roundedRect, p);
+        }
+
+        // draw the border
+        p.StrokeWidth = 2;
+        p.MaskFilter = null;
+        p.Color = SKColors.Green;
+        canvas.DrawPath(roundedRect, p);
+    }
+}

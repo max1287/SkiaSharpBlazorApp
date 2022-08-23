@@ -1,11 +1,17 @@
-﻿using SkiaSharp;
-using SkiaSharp.Views.Blazor;
+﻿@page "/sample4"
+@using SkiaSharp
+@using SkiaSharp.Views.Blazor
 
-namespace SkiaSharpBlazorApp.Pages
-{
-    public partial class Index
-    {
-        private void OnPaintSurface(SKPaintGLSurfaceEventArgs e)
+<PageTitle>Sample 4</PageTitle>
+
+<h1>Draw text using <code>SKImageFilter</code> blur, inside <code>SKGLView</code> component</h1>
+<p>Randomly fails</p>
+<code>SKImageFilter.CreateBlur(sigmaX,sigmaY)</code>
+
+<SKGLView IgnorePixelScaling="true" EnableRenderLoop="true" OnPaintSurface="OnPaintSurface"/>
+
+@code {
+    private void OnPaintSurface(SKPaintGLSurfaceEventArgs e)
         {
             var canvas = e.Surface.Canvas;
 
@@ -25,7 +31,7 @@ namespace SkiaSharpBlazorApp.Pages
 
                 // ImageFilter leads to a "memory access out of bounds" exception
                 // while the application is running
-                paint.ImageFilter = SKImageFilter.CreateDropShadow(dx,dy,sigmaX,sigmaY,SKColors.Red);
+                paint.ImageFilter = SKImageFilter.CreateBlur(sigmaX,sigmaY);
 
                 float xText = 0;
                 float yText = 100;
@@ -33,5 +39,4 @@ namespace SkiaSharpBlazorApp.Pages
                 canvas.DrawText("SKIA", xText, yText, paint);
             }
         }
-    }
 }

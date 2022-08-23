@@ -1,12 +1,12 @@
-﻿@page "/"
+﻿@page "/sample5"
 @using SkiaSharp
 @using SkiaSharp.Views.Blazor
 
-<PageTitle>Sample 1</PageTitle>
+<PageTitle>Sample 5</PageTitle>
 
-<h1>Draw text using <code>SKImageFilter</code> shadow, inside <code>SKGLView</code> component</h1>
-<p>Randomly fails</p>
-<code>SKImageFilter.CreateDropShadow(dx, dy, sigmaX, sigmaY, SKColors.Red)</code>
+<h1>Draw text using <code>SKImageFilter</code> blur with <code>SKShaderTileMode.Clamp</code> flag, inside <code>SKGLView</code> component</h1>
+<p>It seems to work</p>
+<code>SKImageFilter.CreateBlur(sigmaX,sigmaY,SKShaderTileMode.Clamp)</code>
 
 <SKGLView IgnorePixelScaling="true" EnableRenderLoop="true" OnPaintSurface="OnPaintSurface"/>
 
@@ -31,7 +31,7 @@
 
                 // ImageFilter leads to a "memory access out of bounds" exception
                 // while the application is running
-                paint.ImageFilter = SKImageFilter.CreateDropShadow(dx, dy, sigmaX, sigmaY, SKColors.Red);
+                paint.ImageFilter = SKImageFilter.CreateBlur(sigmaX,sigmaY,SKShaderTileMode.Clamp);
 
                 float xText = 0;
                 float yText = 100;
@@ -40,3 +40,4 @@
             }
         }
 }
+

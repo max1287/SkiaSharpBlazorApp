@@ -1,0 +1,47 @@
+﻿@page "/sample2"
+@using SkiaSharp
+@using SkiaSharp.Views.Blazor
+@inject HttpClient Http
+
+<PageTitle>Sample 2</PageTitle>
+
+<h1>Draw image using <code>SKImageFilter</code> blur, inside <code>SKGLView</code> component</h1>
+<p>Randomly fails</p>
+<code>SKImageFilter.CreateBlur(5, 5)</code>
+
+@if (Bitmap == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <SKGLView IgnorePixelScaling="true" EnableRenderLoop="true" OnPaintSurface="OnPaintSurface"/>
+}
+
+@code {
+    private SKBitmap? Bitmap;
+
+    protected override async Task OnInitializedAsync()
+    {
+        using (var stream = await Http.GetStreamAsync("sample-data/baboon.jpg"))
+        {            
+            Bitmap = SKBitmap.Decode(stream);
+        }
+    }    
+
+    private void OnPaintSurface(SKPaintGLSurfaceEventArgs e)
+        {
+            var canvas = e.Surface.Canvas;
+
+            // below is a sample from:
+            // https://github.com/mono/SkiaSharp/blob/2ad29861d5a40d3bf78c28ab0a9cb02a8f0fe437/samples/Gallery/Shared/Samples/BlurImageFilterSample.cs
+
+            using (var filter = SKImageFilter.CreateBlur(5, 5, SKShaderTileMode.Clamp))
+			using (var paint = new SKPaint())
+			{
+				paint.ImageFilter = filter;
+
+				canvas.DrawBitmap(Bitmap, SKRect.Create(500, 500), paint);
+			}
+        }
+}
